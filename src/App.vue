@@ -37,24 +37,8 @@
 
     <!-- modal -->
     <teleport to="body">
-      <div class="modal" v-show="winner !== null">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header d-flex justify-content-center">
-              <h5 class="modal-title" id="examplemodalLabel">Game Over</h5>
-            </div>
-            <div class="modal-body">
-              <p v-if="winner == 'Player'">You Win</p>
-              <p v-else-if="winner == 'Monster'">You Lose</p>
-              <p v-else>Draw</p>
-            </div>
-            <div class="modal-footer">
-              <button @click="start" data-bs-dismiss="modal">Play again</button>
-            </div>
-          </div>
-        </div>
-      </div></teleport
-    >
+      <noti-toast @start="start" v-show="winner !== null" />
+    </teleport>
 
     <section id="log" class="container">
       <h2>Battle Log</h2>
@@ -97,13 +81,15 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import Notification from './components/Notification.vue';
 function getRandomValue(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 export default {
   name: 'App',
-  components: {},
+  components: {
+    notiToast: Notification,
+  },
   data() {
     return {
       playerHealth: 100,
@@ -156,7 +142,6 @@ export default {
         actionValue: value,
         round: this.count - 1,
       });
-      console.log(this.logMessages);
     },
   },
   computed: {
@@ -170,7 +155,7 @@ export default {
       return this.count % 3 !== 0;
     },
     canUseHeal() {
-      return this.count % 4 !== 0;
+      return this.count % 3 !== 0;
     },
     canUseSurrender() {
       return this.count == 1;
@@ -324,14 +309,5 @@ button:disabled {
 
 .log--heal {
   color: green;
-}
-
-.modal {
-  background-color: rgb(0, 0, 0, 0.6);
-  display: block;
-}
-
-.modal-body {
-  font-size: 24px;
 }
 </style>
